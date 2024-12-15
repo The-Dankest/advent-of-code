@@ -8,9 +8,16 @@ while True:
         answer, operands = line.split(":")
         answer = int(answer)
         operands = [int(x) for x in operands.split()]
-        for operators in product(["*", "+"], repeat=len(operands) - 1):
-            print(operators)
-            if answer == eval(str(operands[0]) + "".join([f"{operators[i]}{operands[i + 1]}" for i in range(len(operators))])):
+        for operators in product(["*", "+", "||"], repeat=len(operands) - 1):
+            total = operands[0]
+            for i, op in enumerate(operators):
+                if op == "*":
+                    total *= operands[i + 1]
+                elif op == "+":
+                    total += operands[i + 1]
+                else:
+                    total = int(str(total) + str(operands[i + 1]))
+            if answer == total:
                 count += answer
                 break
     except EOFError:

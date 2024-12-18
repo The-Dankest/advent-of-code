@@ -1,29 +1,28 @@
-ans = [2, 4, 1, 2, 7, 5, 4, 7, 1, 3, 5, 5, 0, 3, 3, 0]
+ans = [2,4,1,2,7,5,4,7,1,3,5,5,0,3,3,0]
 
-start = 35_184_372_088_832
-end =  281_474_976_710_655
+value = 0
+for j in range(len(ans)):
+    for i in range(8 ** (j + 1)):
+        a = 8 * value + i
 
-for i in range(start, end):
-    a = i
-    b = 0
-    c = 0
+        output = []
 
-    output = []
-
-    while True:
-        b = a % 8
-        b = b ^ 2
-        c = a // (2 ** b)
-        b = b ^ c
-        b = b ^ 3
-        output.append(str(b % 8))
-        a = a // 8
-        if output[0] == 2:
-            print(i)
+        while True:
+            b = a % 8
+            b = b ^ 2
+            c = a // (2 ** b)
+            b = b ^ 3
+            b = b ^ c
+            output.append(b % 8)
+            a = a // 8
+            if a == 0:
+                break
+        
+        print(output)
+        print(ans[len(ans) - j - 1:])
+        if ans[len(ans) - j - 1:] == output:
+            value = 8 * value + i
+            print(value)
             break
-        # if a == 0:
-        #     break
 
-    # if ans == output:
-    #     print(i)
-    #     exit()
+print(value)

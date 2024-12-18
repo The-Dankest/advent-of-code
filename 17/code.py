@@ -31,21 +31,29 @@ while 0 <= IP < len(program):
     
     if opcode == ADV:
         A = A // (2 ** combo)
+        print(f"a = a // {2 ** combo}")
     elif opcode == BXL:
         B = B ^ literal
+        print(f"b = b ^ {literal}")
     elif opcode == BST:
         B = combo % 8
-    elif opcode == JNZ:
+        print(f"b = {combo} % 8")
+    elif opcode == JNZ: # 3
         if A != 0:
+            print("jump literal")
             IP = literal - 2
     elif opcode == BXC:
         B = B ^ C
+        print("b = b ^ c")
     elif opcode == OUT:
         out.append(combo % 8)
+        print("out.append(str(b % 8))")
     elif opcode == BDV:
         B = A // (2 ** combo)
+        print(f"b = a // {2 ** combo}")
     elif opcode == CDV:
         C = A // (2 ** combo)
+        print(f"c = a // {2 ** combo})")
 
     IP += 2
 

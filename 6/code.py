@@ -28,7 +28,6 @@ while in_grid(pos[0], pos[1]):
         break
     pos = (pos[0] + directions[dir][0], pos[1] + directions[dir][1])
     if in_grid(pos[0], pos[1]):
-        # if grid[pos[0]][pos[1]] == "X":
         next_pos = (pos[0] + directions[(dir + 1) % len(directions)][0], pos[1] + directions[(dir + 1) % len(directions)][1])
         if in_grid(next_pos[0], next_pos[1]) and grid[next_pos[0]][next_pos[1]] == "X":
             position_count += 1

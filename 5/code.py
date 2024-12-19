@@ -15,32 +15,27 @@ def is_valid(rules, pages: list):
 
 
 def order_pages(rules, pages):
-    graph = defaultdict(list)
-    in_degree = defaultdict(int)
-    in_pages = set(pages)
-    filtered_rules = [(a, b) for a, b in rules if a in in_pages or b in in_pages]
+    from functools import cmp_to_key
+
+    # Create a lookup dictionary for rule precedence
+    precedence = {a: set() for a, b in rules}
+    for a, b in rules:
+        precedence.setdefault(a, set()).add(b)
+        precedence.setdefault(b, set())
     
-    for a, b in filtered_rules:
-        graph[a].append(b)
-        in_degree[b] += 1
-        if a not in in_degree:
-            in_degree[a] = 0
+    # Perform topological sorting based on the rules
+    def compare(x, y):
+        # If x comes before y according to the rules
+        if y in precedence.get(x, set()):
+            return -1
+        # If y comes before x according to the rules
+        elif x in precedence.get(y, set()):
+            return 1
+        # Otherwise, preserve natural order
+        return 0
 
-    queue = deque([node for node in in_degree if in_degree[node] == 0])
-    order = []
-    
-    while queue:
-        current = queue.popleft()
-        order.append(current)
-        
-        for neighbor in graph[current]:
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
-
-    rank = {num: i for i, num in enumerate(order)}
-
-    return sorted(pages, key=lambda x: rank.get(x, float('inf')))
+    # Sort items using the custom comparator
+    return sorted(pages, key=cmp_to_key(compare))
 
 rules = []
 

@@ -11,7 +11,6 @@ for i, row in enumerate(grid):
     if "^" in row:
         j = row.index("^")
         pos = (i, j)
-        row[j] = "X"
         break
 
 print(pos)
@@ -27,11 +26,30 @@ while in_grid(pos[0], pos[1]):
             continue
         break
     pos = (pos[0] + directions[dir][0], pos[1] + directions[dir][1])
-    if in_grid(pos[0], pos[1]):
-        next_pos = (pos[0] + directions[(dir + 1) % len(directions)][0], pos[1] + directions[(dir + 1) % len(directions)][1])
-        if in_grid(next_pos[0], next_pos[1]) and grid[next_pos[0]][next_pos[1]] == "X":
-            position_count += 1
-        grid[pos[0]][pos[1]] = "X"
+    temp_pos = pos
+    temp_dir = dir
+
+    next_pos = (pos[0] + directions[dir][0], pos[1] + directions[dir][1])
+    temp_next_pos = next_pos
+    visited_cells = set()
+    if in_grid(next_pos[0], next_pos[1]) and grid[next_pos[0]][next_pos[1]] == ".":
+        grid[next_pos[0]][next_pos[1]] = "#"
+        while in_grid(pos[0], pos[1]) and (pos, dir) not in visited_cells:
+            for i in range(4):
+                next_pos = (pos[0] + directions[dir][0], pos[1] + directions[dir][1])
+                if in_grid(next_pos[0], next_pos[1]) and grid[next_pos[0]][next_pos[1]] == "#":
+                    dir = (dir + 1) % len(directions)
+                    visited_cells.add((pos, dir))
+                    continue
+                break
+            visited_cells.add((pos, dir))
+            pos = (pos[0] + directions[dir][0], pos[1] + directions[dir][1])
+            if pos == temp_pos:
+                position_count += 1
+                break
+        grid[temp_next_pos[0]][temp_next_pos[1]] = "."
+    pos = temp_pos
+    dir = temp_dir
 
 for row in grid:
     print("".join(row))

@@ -1,4 +1,4 @@
-from collections import defaultdict, deque
+from functools import cmp_to_key
 
 def is_valid(rules, pages: list):
     in_pages = set(pages)
@@ -15,26 +15,18 @@ def is_valid(rules, pages: list):
 
 
 def order_pages(rules, pages):
-    from functools import cmp_to_key
-
-    # Create a lookup dictionary for rule precedence
     precedence = {a: set() for a, b in rules}
     for a, b in rules:
         precedence.setdefault(a, set()).add(b)
         precedence.setdefault(b, set())
     
-    # Perform topological sorting based on the rules
     def compare(x, y):
-        # If x comes before y according to the rules
         if y in precedence.get(x, set()):
             return -1
-        # If y comes before x according to the rules
         elif x in precedence.get(y, set()):
             return 1
-        # Otherwise, preserve natural order
         return 0
 
-    # Sort items using the custom comparator
     return sorted(pages, key=cmp_to_key(compare))
 
 rules = []
